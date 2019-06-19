@@ -1,0 +1,30 @@
+---
+- hosts: zabbix-servers
+  gather_facts: no
+  become: yes
+  become_user: root
+  become_method: sudo
+  tasks:
+  - name: Clone Zabbix-LDAP-Integration repo
+    git:
+      repo: 'https://github.com/GLutzBR/zabbix-ldap-integration.git'
+      dest: /opt/zabbix-ldap-integration
+      clone: yes
+      version: master
+      update: no
+
+  - name: Configure connection.conf
+
+  - name: Create Crontab to use the script
+    cron:
+      name: "Zabbix-LDAP-Integration"
+      user: root
+      minute: "*/30"
+      job: "python3 /opt/zabbix-ldap-integration/zabbix_ldap_integration.py < connection.conf > /dev/null"
+      state: absent
+
+  handlers:
+     - name: restart ssh
+       service:
+         name=sshd
+         state=restarted
