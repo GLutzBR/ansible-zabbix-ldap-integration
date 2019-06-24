@@ -1,10 +1,13 @@
 ---
 - hosts: zabbix-servers
-  gather_facts: no
   become: yes
   become_user: root
   become_method: sudo
   tasks:
+  - name: Create root directory
+    shell: mkdir /opt/zabbix-ldap-integration
+    args:
+      executable: /bin/bash
   - name: Clone Zabbix-LDAP-Integration repo
     git:
       repo: 'https://github.com/GLutzBR/zabbix-ldap-integration.git'
@@ -14,6 +17,17 @@
       update: no
 
   - name: Configure connection.conf
+    shell: |
+      echo 'http://{{ ansible_fqdn }}/zabbix
+      zabbix
+      password
+      ldap://auth.example.com:389
+      CN=Zabbix User Admin,OU=Zabbix,DC=example,DC=com
+      password
+      DC=example,DC=com
+      CN=zabbix.admins,OU=Zabbix,DC=example,DC=com' > /opt/zabbix-ldap-integration/connection.conf
+    args:
+      executable: /bin/bash
 
   - name: Create Crontab to use the script
     cron:
