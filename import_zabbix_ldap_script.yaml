@@ -48,5 +48,11 @@
     cron:
       name: "Zabbix-LDAP-Integration"
       user: root
-      minute: "*/30"
-      job: "python3 /opt/zabbix-ldap-integration/zabbix_ldap_integration.py < connection.conf > /dev/null"
+      minute: "*/10"
+      job: "python3 /opt/zabbix-ldap-integration/zabbix_ldap_integration.py < /opt/zabbix-ldap-integration/connection.conf > /dev/null"
+
+  - name: Execute script for the first time
+    shell: python3 zabbix_ldap_integration.py < connection.conf >> /tmp/zabbix-ldap.log
+    args:
+      chdir: /opt/zabbix-ldap-integration/
+      executable: /bin/bash
