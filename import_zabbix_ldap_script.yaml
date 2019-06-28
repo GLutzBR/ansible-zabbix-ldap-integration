@@ -29,7 +29,8 @@
       repo: 'https://github.com/GLutzBR/zabbix-ldap-integration.git'
       dest: /opt/zabbix-ldap-integration
       force: yes
-#      refspec: '+refs/pull/*:refs/heads/*' # uncomment if you're going to pull new updates
+      # uncomment if you're going to pull new updates
+#      refspec: '+refs/pull/*:refs/heads/*'
       version: master
   - name: Configure connection.conf
     shell: |
